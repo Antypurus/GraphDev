@@ -27,6 +27,8 @@ int main(void)
 		return -1;
 	}
 
+	std::cout << glGetString(GL_VERSION) << "\n";
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
