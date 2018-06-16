@@ -18,13 +18,14 @@ int main(void)
 		return -1;
 	}
 
-	if(glewInit()!=GLEW_OK)
-	{
-		printf("Error Initializing GLEW\n");
-	}
-
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+
+	if (glewInit() != GLEW_OK)
+	{
+		printf("Error Initializing GLEW\n");
+		return -1;
+	}
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
