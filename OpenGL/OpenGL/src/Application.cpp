@@ -1,4 +1,6 @@
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 int main(void)
 {
@@ -14,6 +16,11 @@ int main(void)
 	{
 		glfwTerminate();
 		return -1;
+	}
+
+	if(glewInit()!=GLEW_OK)
+	{
+		printf("Error Initializing GLEW\n");
 	}
 
 	/* Make the window's context current */
