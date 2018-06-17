@@ -1,11 +1,5 @@
 ﻿#pragma once
 
-#include <GL/glew.h>
-#include <iostream>
-
-static void GLClearError();
-static bool GLLogCall();
-
 #define DEBUG 1
 
 #define ASSERT(x) if(!(x)) __debugbreak();
@@ -20,23 +14,6 @@ static bool GLLogCall();
 	x;
 #endif
 
-static void GLClearError()
-{
-	while (glGetError() != GL_NO_ERROR);
-}
+void GLClearError();
 
-static bool GLLogCall(const char* function, const char* file, int line)
-{
-	while (GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error]" << error << ":" << function << " File:" << file << ":" << line << '\n';
-		return false;
-	}
-	return true;
-}
-
-class Renderer
-{
-public:
-	
-};
+bool GLLogCall(const char* function, const char* file, int line);

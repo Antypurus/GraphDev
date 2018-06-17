@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 
+#include "Renderer.h"
+
 struct ShaderProgramSource
 {
 	std::string VertexSource;
