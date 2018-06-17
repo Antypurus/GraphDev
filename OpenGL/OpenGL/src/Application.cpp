@@ -6,6 +6,8 @@
 #include <sstream>
 
 #include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 struct ShaderProgramSource
 {
@@ -121,88 +123,83 @@ int main(void)
 	}
 
 	std::cout << glGetString(GL_VERSION) << "\n";
-
-	float positions[] = {
-		-0.5f, -0.5f,   //0
-		 0.5f, -0.5f,   //1
-		 0.5f,  0.5f,   //2
-		-0.5f,  0.5f	//3
-	};
-
-	unsigned int indices[] = {
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	unsigned int vao;
-	GlCall(glGenVertexArrays(1, &vao));
-	GlCall(glBindVertexArray(vao));
-
-	unsigned int buffer;//contains the id of the generated buffer
-	GlCall(glGenBuffers(1, &buffer));//generate 1 buffer
-	GlCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));//bind the buffer for usage
-	GlCall(glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), positions, GL_STATIC_DRAW)); //sets the data that is being used
-	
-	GlCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
-	GlCall(glEnableVertexAttribArray(0));
-
-	unsigned int indexBufferObject;//contains the id of the generated buffer
-	GlCall(glGenBuffers(1, &indexBufferObject));//generate 1 buffer
-	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject));//bind the buffer for usage
-	GlCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW)); //sets the data that is being used
-
-	ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
-	unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-
-	GlCall(glUseProgram(shader));
-	GlCall(int location = glGetUniformLocation(shader, "u_Color"));
-	//ASSERT(location == -1); //for some reason is always -1 on my computer
-	GlCall(glUniform4f(location, 0.2f, 0.8f, 0.8f, 1.0f));
-
-	GlCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-	GlCall(glUseProgram(0));
-
-
-	float r = 0.0f;
-	float increment = 0.05f;
-
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
 	{
-		/* Render here */
-		GlCall(glClear(GL_COLOR_BUFFER_BIT));
+		float positions[] = {
+			-0.5f, -0.5f,   //0
+			 0.5f, -0.5f,   //1
+			 0.5f,  0.5f,   //2
+			-0.5f,  0.5f	//3
+		};
+
+		unsigned int indices[] = {
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		unsigned int vao;
+		GlCall(glGenVertexArrays(1, &vao));
+		GlCall(glBindVertexArray(vao));
+
+		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+
+		GlCall(glEnableVertexAttribArray(0));
+		GlCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
+
+		IndexBuffer ib(indices, 6);
+
+		ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
+		unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
 
 		GlCall(glUseProgram(shader));
-		GlCall(glUniform4f(location, r, 0.8f, 0.8f, 1.0f));
-		
-		GlCall(glBindVertexArray(vao));
-		GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject));
+		GlCall(int location = glGetUniformLocation(shader, "u_Color"));
+		//ASSERT(location == -1); //for some reason is always -1 on my computer
+		GlCall(glUniform4f(location, 0.2f, 0.8f, 0.8f, 1.0f));
 
-		/* Draw A Triangle By issuing draw call to buffer */
-		GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr));
-		
-		if(r>1.0f)
-		{
-			increment = -0.05f;
-		}
-		else if(r<0.0f)
-		{
-			increment = 0.05f;
-		}
-		r += increment;
-
+		GlCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 		GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 		GlCall(glUseProgram(0));
 
-		/* Swap front and back buffers */
-		GlCall(glfwSwapBuffers(window));
 
-		/* Poll for and process events */
-		GlCall(glfwPollEvents());
+		float r = 0.0f;
+		float increment = 0.05f;
+
+		/* Loop until the user closes the window */
+		while (!glfwWindowShouldClose(window))
+		{
+			/* Render here */
+			GlCall(glClear(GL_COLOR_BUFFER_BIT));
+
+			GlCall(glUseProgram(shader));
+			GlCall(glUniform4f(location, r, 0.8f, 0.8f, 1.0f));
+
+			GlCall(glBindVertexArray(vao));
+			ib.Bind();
+
+			/* Draw A Triangle By issuing draw call to buffer */
+			GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+			if (r > 1.0f)
+			{
+				increment = -0.05f;
+			}
+			else if (r < 0.0f)
+			{
+				increment = 0.05f;
+			}
+			r += increment;
+
+			GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+			GlCall(glUseProgram(0));
+
+			/* Swap front and back buffers */
+			GlCall(glfwSwapBuffers(window));
+
+			/* Poll for and process events */
+			GlCall(glfwPollEvents());
+		}
+
+		GlCall(glDeleteProgram(shader));
 	}
-	
-	GlCall(glDeleteProgram(shader));
 	glfwTerminate();
 	return 0;
 }
