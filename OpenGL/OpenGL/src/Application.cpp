@@ -5,38 +5,6 @@
 #include <string>
 #include <sstream>
 
-static void GLClearError();
-static bool GLLogCall();
-
-#define DEBUG 1
-
-#define ASSERT(x) if(!(x)) __debugbreak();
-
-#if DEBUG
-#define GlCall(x) \
-	GLClearError();\
-	x;\
-	ASSERT(GLLogCall(#x,__FILE__,__LINE__));
-#else
-#define GlCall(x) \
-	x;
-#endif
-
-static void GLClearError()
-{
-	while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(const char* function, const char* file, int line)
-{
-	while(GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error]" << error <<":"<<function<<" File:"<<file<<":"<<line<<'\n';
-		return false;
-	}
-	return true;
-}
-
 struct ShaderProgramSource
 {
 	std::string VertexSource;
@@ -164,6 +132,10 @@ int main(void)
 		2, 3, 0
 	};
 
+	unsigned int vao;
+	GlCall(glGenVertexArrays(1, &vao));
+	GlCall(glBindVertexArray(vao));
+
 	unsigned int buffer;//contains the id of the generated buffer
 	GlCall(glGenBuffers(1, &buffer));//generate 1 buffer
 	GlCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));//bind the buffer for usage
@@ -185,6 +157,11 @@ int main(void)
 	//ASSERT(location == -1); //for some reason is always -1 on my computer
 	GlCall(glUniform4f(location, 0.2f, 0.8f, 0.8f, 1.0f));
 
+	GlCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	GlCall(glUseProgram(0));
+
+
 	float r = 0.0f;
 	float increment = 0.05f;
 
@@ -194,7 +171,12 @@ int main(void)
 		/* Render here */
 		GlCall(glClear(GL_COLOR_BUFFER_BIT));
 
+		GlCall(glUseProgram(shader));
 		GlCall(glUniform4f(location, r, 0.8f, 0.8f, 1.0f));
+		
+		GlCall(glBindVertexArray(vao));
+		GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject));
+
 		/* Draw A Triangle By issuing draw call to buffer */
 		GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr));
 		
@@ -207,6 +189,9 @@ int main(void)
 			increment = 0.05f;
 		}
 		r += increment;
+
+		GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		GlCall(glUseProgram(0));
 
 		/* Swap front and back buffers */
 		GlCall(glfwSwapBuffers(window));
