@@ -8,6 +8,8 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
 
 struct ShaderProgramSource
 {
@@ -136,14 +138,12 @@ int main(void)
 			2, 3, 0
 		};
 
-		unsigned int vao;
-		GlCall(glGenVertexArrays(1, &vao));
-		GlCall(glBindVertexArray(vao));
-
+		VertexArray va;
 		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
-		GlCall(glEnableVertexAttribArray(0));
-		GlCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
+		VertexBufferLayout layout;
+		layout.Push<float>(2);
+		va.addBuffer(vb, layout);
 
 		IndexBuffer ib(indices, 6);
 
@@ -172,7 +172,7 @@ int main(void)
 			GlCall(glUseProgram(shader));
 			GlCall(glUniform4f(location, r, 0.8f, 0.8f, 1.0f));
 
-			GlCall(glBindVertexArray(vao));
+			va.Bind();
 			ib.Bind();
 
 			/* Draw A Triangle By issuing draw call to buffer */
@@ -187,9 +187,6 @@ int main(void)
 				increment = 0.05f;
 			}
 			r += increment;
-
-			GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-			GlCall(glUseProgram(0));
 
 			/* Swap front and back buffers */
 			GlCall(glfwSwapBuffers(window));
