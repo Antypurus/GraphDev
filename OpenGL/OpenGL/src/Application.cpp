@@ -62,7 +62,6 @@ int main(void)
 		IndexBuffer ib(indices, 6);
 
 		Shader shader("res/shaders/Basic.shader");
-		shader.SetUniform4f("u_Color", 0.2f, 0.8f, 0.8f, 1.0f);
 
 		vb.Unbind();
 		ib.Unbind();
