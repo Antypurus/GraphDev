@@ -10,6 +10,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Shader.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -62,6 +63,9 @@ int main(void)
 		IndexBuffer ib(indices, 6);
 
 		Shader shader("res/shaders/Basic.shader");
+
+		Texture texture("res/textures/andromeda.png");
+		texture.Bind();
 
 		vb.Unbind();
 		ib.Unbind();
