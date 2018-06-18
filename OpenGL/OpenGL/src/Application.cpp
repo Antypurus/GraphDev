@@ -42,10 +42,10 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
 		float positions[] = {
-			-0.5f, -0.5f,   //0
-			 0.5f, -0.5f,   //1
-			 0.5f,  0.5f,   //2
-			-0.5f,  0.5f	//3
+			-0.5f, -0.5f, 0.0f, 0.0f,   //0
+			 0.5f, -0.5f, 1.0f, 0.0f,   //1
+			 0.5f,  0.5f, 1.0f, 1.0f,   //2
+			-0.5f,  0.5f, 0.0f, 1.0f	//3
 		};
 
 		unsigned int indices[] = {
@@ -54,9 +54,10 @@ int main(void)
 		};
 
 		VertexArray va;
-		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+		VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
 		VertexBufferLayout layout;
+		layout.Push<float>(2);
 		layout.Push<float>(2);
 		va.addBuffer(vb, layout);
 
@@ -64,8 +65,9 @@ int main(void)
 
 		Shader shader("res/shaders/Basic.shader");
 
-		Texture texture("res/textures/andromeda.png");
+		Texture texture("res/textures/adromeda.png");
 		texture.Bind();
+		shader.SetUniform1i("u_Texture", 0);
 
 		vb.Unbind();
 		ib.Unbind();
