@@ -95,6 +95,8 @@ int main(void)
 		glm::vec3 translationA(200, 200, 0);
 		glm::vec3 translationB(400, 200, 0);
 
+		bool renderImage = true;
+
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
@@ -134,9 +136,10 @@ int main(void)
 			r += increment;
 
 			{
-                 // Display some text (you can use a format string too)
+				// Display some text (you can use a format string too)
 				ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
 				ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
+				ImGui::Checkbox("Debug", &renderImage);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
 
