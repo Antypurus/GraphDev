@@ -25,29 +25,35 @@ Test::TestDuplicateSquareRender::TestDuplicateSquareRender()
 	GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	GlCall(glEnable(GL_BLEND));
 
-	VertexArray va;
-	VertexBuffer vb(positions, 4 * 4 * sizeof(float));
+	va = new VertexArray;
+	vb = new VertexBuffer(positions, 4 * 4 * sizeof(float));
 
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.addBuffer(vb, layout);
+	layout = new VertexBufferLayout;
+	layout->Push<float>(2);
+	layout->Push<float>(2);
+	va->addBuffer(*vb, *layout);
 
-	IndexBuffer ib(indices, 6);
+	ib = new IndexBuffer(indices, 6);
 
 	glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
 
-	Shader shader("res/shaders/Basic.shader");
+	this->proj = proj;
+	this->view = view;
 
-	Texture texture("res/textures/adromeda.png");
-	texture.Bind();
-	shader.SetUniform1i("u_Texture", 0);
+	shader = new Shader("res/shaders/Basic.shader");
 
-	vb.Unbind();
-	ib.Unbind();
-	shader.Unbind();
-	va.Unbind();
+	texture = new Texture("res/textures/adromeda.png");
+	texture->Bind();
+	shader->SetUniform1i("u_Texture", 0);
+
+	vb->Unbind();
+	ib->Unbind();
+	shader->Unbind();
+	va->Unbind();
+
+	this->translationA = glm::vec3(200, 200, 0);
+	this->translationB = glm::vec3(400, 200, 0);
 
 	Renderer renderer;
 }
@@ -61,12 +67,30 @@ void Test::TestDuplicateSquareRender::OnUpdate(float deltaTime)
 	ImGui::Separator();
 
 	//Display some text (you can use a format string too)
-	//ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
-	//ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
-	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
+	ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 
 void Test::TestDuplicateSquareRender::OnRender()
 {
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
+		glm::mat4 mvp = proj * view * model;
+		shader->Bind();
+		shader->SetUniformMat4f("u_MVP", mvp);
+	}
 
+	/* Draw A Triangle By issuing draw call to buffer */
+	renderer->Draw(*va, *ib, *shader);
+
+
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+		glm::mat4 mvp = proj * view * model;
+		shader->Bind();
+		shader->SetUniformMat4f("u_MVP", mvp);
+	}
+
+	renderer->Draw(*va, *ib, *shader);
 }
