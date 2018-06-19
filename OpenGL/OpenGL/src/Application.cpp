@@ -15,6 +15,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
+#include "tests/TestDuplicateSquareRender.h"
 
 int main(void)
 {
@@ -45,6 +46,9 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
+
+		Test::TestDuplicateSquareRender test;
+
 		float positions[] = {
 			-50.0f, -50.0f, 0.0f, 0.0f,   //0
 			50.0f, -50.0f, 1.0f, 0.0f,   //1
