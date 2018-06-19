@@ -11,7 +11,6 @@ private:
 	int				m_Height;
 	int				m_BPP;
 public:
-	Texture(){}
 	Texture(const std::string& filepath);
 	~Texture();
 

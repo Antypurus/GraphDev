@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <iostream>
+#include <cstdlib>
 
 Shader::Shader(const std::string& filepath):m_Filepath(filepath)
 {
@@ -61,6 +62,13 @@ void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
 ShaderProgramSource Shader::ParseShader()
 {
 	std::ifstream file(m_Filepath);
+
+	if(!file.is_open())
+	{
+		std::cout << "Failed to find shader file\n";
+		std::cin.get();
+		exit(-1);
+	}
 
 	enum class ShaderType
 	{
