@@ -58,22 +58,33 @@ Test::TestDuplicateSquareRender::TestDuplicateSquareRender()
 	Renderer renderer;
 }
 
-void Test::TestDuplicateSquareRender::OnImGuiRender()
+Test::TestDuplicateSquareRender::~TestDuplicateSquareRender()
 {
+	delete va;
+	delete vb;
+	delete layout;
+	delete ib;
+	delete shader;
+	delete texture;
+	delete renderer;
 }
 
-void Test::TestDuplicateSquareRender::OnUpdate(float deltaTime)
+void Test::TestDuplicateSquareRender::OnImGuiRender()
 {
-	ImGui::Separator();
-
 	//Display some text (you can use a format string too)
 	ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
 	ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 
+void Test::TestDuplicateSquareRender::OnUpdate(float deltaTime)
+{
+}
+
 void Test::TestDuplicateSquareRender::OnRender()
 {
+	renderer->Clear();
+
 	{
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
 		glm::mat4 mvp = proj * view * model;

@@ -30,6 +30,7 @@ namespace Test
 		glm::vec3 translationB;
 	public:
 		TestDuplicateSquareRender();
+		~TestDuplicateSquareRender();
 		void OnImGuiRender() override;
 		void OnUpdate(float deltaTime) override;
 		void OnRender() override;
