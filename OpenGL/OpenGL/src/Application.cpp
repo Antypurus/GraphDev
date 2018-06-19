@@ -136,7 +136,12 @@ int main(void)
 			r += increment;
 
 			{
-				// Display some text (you can use a format string too)
+				if (ImGui::BeginMenu("Test Cases"))
+				{
+					if (ImGui::MenuItem("Clear Color Text")) { printf("Select The Clear Color Test Case"); }
+					ImGui::EndMenu();
+				}
+				//Display some text (you can use a format string too)
 				ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
 				ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
 				ImGui::Checkbox("Debug", &renderImage);
