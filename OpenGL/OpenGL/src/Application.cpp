@@ -5,14 +5,7 @@
 #include <stdio.h>
 
 #include "Renderer.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "VertexBufferLayout.h"
-#include "Shader.h"
-#include "Texture.h"
 #include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 #include "tests/TestDuplicateSquareRender.h"
@@ -45,9 +38,19 @@ int main(void)
 		return -1;
 	}
 
+	GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
+	if(cursor!=NULL)
+	{
+		glfwSetCursor(window, cursor);
+		printf("Cursor created and set\n");
+	}
+	else
+	{
+		printf("Failed to create cursor\n");
+	}
+
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
-
 		Test::Test* currentTest = new Test::TestDuplicateSquareRender;
 
 		ImGui::CreateContext();
@@ -96,6 +99,7 @@ int main(void)
 
 	ImGui_ImplGlfwGL3_Shutdown();
 	ImGui::DestroyContext();
+	glfwDestroyCursor(cursor);
 	glfwTerminate();
 
 	return 0;
