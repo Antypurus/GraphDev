@@ -10,6 +10,7 @@
 #include "imgui/imgui_impl_glfw_gl3.h"
 #include "tests/TestDuplicateSquareRender.h"
 #include "tests/TestClearColor.h"
+#include "tests/TestSimple3D.h"
 
 int main(void)
 {
@@ -77,6 +78,11 @@ int main(void)
 					{
 						delete currentTest;
 						currentTest = new Test::TestDuplicateSquareRender;
+					}
+					if (ImGui::MenuItem("Simple 3D Test"))
+					{
+						delete currentTest;
+						currentTest = new Test::TestSimple3D;
 					}
 					ImGui::EndMenu();
 				}
