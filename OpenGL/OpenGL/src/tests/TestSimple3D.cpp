@@ -11,10 +11,10 @@ namespace Test
 TestSimple3D::TestSimple3D()
 {
 	float positions[] = {
-		-50.0f, -50.0f, 50.0f, 0.0f, 0.0f,   //0
-		 50.0f, -50.0f, 50.0f, 1.0f, 0.0f,   //1
-		 50.0f,  50.0f, 50.0f, 1.0f, 1.0f,   //2
-		-50.0f,  50.0f, 50.0f, 0.0f, 1.0f	//3
+		-50.0f, -50.0f, 00.0f, 0.0f, 0.0f,   //0
+		 50.0f, -50.0f, 00.0f, 1.0f, 0.0f,   //1
+		 50.0f,  50.0f, 00.0f, 1.0f, 1.0f,   //2
+		-50.0f,  50.0f, 00.0f, 0.0f, 1.0f	//3
 	};
 
 	unsigned int indices[] = {
@@ -82,7 +82,6 @@ void TestSimple3D::OnRender()
 
 	{
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
-
 		model = glm::rotate(model, glm::radians(this->rotationAngle.x),  glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotationAngle.y),  glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotationAngle.z),  glm::vec3(0.0f, 0.0f, 1.0f));
