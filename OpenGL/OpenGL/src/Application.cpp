@@ -12,6 +12,16 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestSimple3D.h"
 
+bool drawGui = true;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_RIGHT_ALT && action == GLFW_PRESS)
+	{
+		drawGui = !drawGui;
+	}
+}
+
 int main(void)
 {
 	GLFWwindow* window;
@@ -67,29 +77,36 @@ int main(void)
 			ImGui_ImplGlfwGL3_NewFrame();
 
 			{
-				if (ImGui::BeginMenu("Test Cases"))
+
+				if(drawGui)
 				{
-					if (ImGui::MenuItem("Clear Color Test"))
+				if (ImGui::BeginMainMenuBar()) {
+
+					if (ImGui::BeginMenu("Test Cases"))
 					{
-						delete currentTest;
-						currentTest = new Test::TestClearColor;
+						if (ImGui::MenuItem("Clear Color Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::TestClearColor;
+						}
+						if (ImGui::MenuItem("Duplicate Square Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::TestDuplicateSquareRender;
+						}
+						if (ImGui::MenuItem("Simple 3D Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::TestSimple3D;
+						}
+						ImGui::EndMenu();
 					}
-					if (ImGui::MenuItem("Duplicate Square Test"))
-					{
-						delete currentTest;
-						currentTest = new Test::TestDuplicateSquareRender;
-					}
-					if (ImGui::MenuItem("Simple 3D Test"))
-					{
-						delete currentTest;
-						currentTest = new Test::TestSimple3D;
-					}
-					ImGui::EndMenu();
+
+					ImGui::EndMainMenuBar();
 				}
 
-				ImGui::Separator();
-
 				currentTest->OnImGuiRender();
+				}
 			}
 
 			ImGui::Render();
@@ -100,6 +117,7 @@ int main(void)
 
 			/* Poll for and process events */
 			glfwPollEvents();
+			glfwSetKeyCallback(window, key_callback);
 		}
 	}
 
