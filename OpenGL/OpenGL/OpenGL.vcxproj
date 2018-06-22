@@ -141,6 +141,7 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\tests\TestClearColor.cpp" />
     <ClCompile Include="src\tests\TestDuplicateSquareRender.cpp" />
+    <ClCompile Include="src\tests\TestPerPixelBasicLigthing.cpp" />
     <ClCompile Include="src\tests\TestSimple3D.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="src\tests\Test.h" />
     <ClInclude Include="src\tests\TestClearColor.h" />
     <ClInclude Include="src\tests\TestDuplicateSquareRender.h" />
+    <ClInclude Include="src\tests\TestPerPixelBasicLigthing.h" />
     <ClInclude Include="src\tests\TestSimple3D.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
