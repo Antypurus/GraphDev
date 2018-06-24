@@ -11,6 +11,7 @@
 #include "tests/TestDuplicateSquareRender.h"
 #include "tests/TestClearColor.h"
 #include "tests/TestSimple3D.h"
+#include "tests/TestPerPixelBasicLigthing.h"
 
 bool drawGui = true;
 
@@ -62,7 +63,7 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
-		Test::Test* currentTest = new Test::TestDuplicateSquareRender;
+		Test::Test* currentTest = new Test::TestSimple3D;
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, true);
@@ -99,6 +100,11 @@ int main(void)
 							delete currentTest;
 							currentTest = new Test::TestSimple3D;
 						}
+						if (ImGui::MenuItem("Basic Per Pixel Lighing Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::TestPerPixelBasicLigthing;
+						}
 						ImGui::EndMenu();
 					}
 
@@ -119,6 +125,8 @@ int main(void)
 			glfwPollEvents();
 			glfwSetKeyCallback(window, key_callback);
 		}
+
+		delete currentTest;
 	}
 
 	ImGui_ImplGlfwGL3_Shutdown();
