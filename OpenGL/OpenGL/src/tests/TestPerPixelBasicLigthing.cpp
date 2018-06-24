@@ -8,35 +8,39 @@
 
 Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 {
+	glEnable(GL_DEPTH_TEST);
+
 	float positions[] = {
-		-50.0f, -50.0f, 00.0f, 0.0f, 0.0f,   //0
-		 50.0f, -50.0f, 00.0f, 1.0f, 0.0f,   //1
-		 50.0f,  50.0f, 00.0f, 1.0f, 1.0f,   //2
-		-50.0f,  50.0f, 00.0f, 0.0f, 1.0f,	 //3
-		-50.0f, -50.0f, 50.0f, 0.0f, 0.0f,   //4
-		 50.0f, -50.0f, 50.0f, 1.0f, 0.0f,   //5
-		 50.0f,  50.0f, 50.0f, 1.0f, 1.0f,   //6
-		-50.0f,  50.0f, 50.0f, 0.0f, 1.0f	 //7
+		-50.0f, -50.0f,  50.0f, 0.0f, 0.0f,   //0
+		 50.0f, -50.0f,  50.0f, 1.0f, 0.0f,   //1
+		 50.0f,  50.0f,  50.0f, 1.0f, 1.0f,   //2
+		-50.0f,  50.0f,  50.0f, 0.0f, 1.0f,	  //3
+
+		-50.0f, -50.0f, -50.0f, 0.0f, 0.0f,   //4
+		 50.0f, -50.0f, -50.0f, 1.0f, 0.0f,   //5
+		 50.0f,  50.0f, -50.0f, 1.0f, 1.0f,   //6
+		-50.0f,  50.0f, -50.0f, 0.0f, 1.0f	  //7
 	};
 
 	unsigned int indices[] = {
+		// front
 		0, 1, 2,
 		2, 3, 0,
-
-		2, 6, 5,
-		2, 5, 1,
-
-		6, 4, 5,
-		6, 0, 4,
-
-		3, 4, 7,
-		3, 4, 0,
-
-		7, 6, 4,
-		4, 5, 6,
-
-		2, 3, 7,
-		2, 7, 6
+		// top
+		3, 2, 6,
+		6, 7, 3,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// right
+		1, 5, 6,
+		6, 2, 1,
 	};
 
 	GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -95,6 +99,11 @@ Test::TestPerPixelBasicLigthing::~TestPerPixelBasicLigthing()
 
 void Test::TestPerPixelBasicLigthing::OnUpdate(float deltaTime)
 {
+
+}
+
+void Test::TestPerPixelBasicLigthing::OnRender()
+{
 	renderer->Clear();
 
 	{
@@ -110,11 +119,6 @@ void Test::TestPerPixelBasicLigthing::OnUpdate(float deltaTime)
 
 	/* Draw A Triangle By issuing draw call to buffer */
 	renderer->Draw(*va, *ib, *shader);
-}
-
-void Test::TestPerPixelBasicLigthing::OnRender()
-{
-
 }
 
 void Test::TestPerPixelBasicLigthing::OnImGuiRender()
