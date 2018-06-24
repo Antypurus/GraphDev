@@ -10,28 +10,47 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 {
 	float positions[] = {
 		-50.0f, -50.0f, 00.0f, 0.0f, 0.0f,   //0
-		50.0f, -50.0f, 00.0f, 1.0f, 0.0f,   //1
-		50.0f,  50.0f, 00.0f, 1.0f, 1.0f,   //2
-		-50.0f,  50.0f, 00.0f, 0.0f, 1.0f	//3
+		 50.0f, -50.0f, 00.0f, 1.0f, 0.0f,   //1
+		 50.0f,  50.0f, 00.0f, 1.0f, 1.0f,   //2
+		-50.0f,  50.0f, 00.0f, 0.0f, 1.0f,	 //3
+		-50.0f, -50.0f, 50.0f, 0.0f, 0.0f,   //4
+		 50.0f, -50.0f, 50.0f, 1.0f, 0.0f,   //5
+		 50.0f,  50.0f, 50.0f, 1.0f, 1.0f,   //6
+		-50.0f,  50.0f, 50.0f, 0.0f, 1.0f	 //7
 	};
 
 	unsigned int indices[] = {
 		0, 1, 2,
-		2, 3, 0
+		2, 3, 0,
+
+		2, 6, 5,
+		2, 5, 1,
+
+		6, 4, 5,
+		6, 0, 4,
+
+		3, 4, 7,
+		3, 4, 0,
+
+		7, 6, 4,
+		4, 5, 6,
+
+		2, 3, 7,
+		2, 7, 6
 	};
 
 	GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	GlCall(glEnable(GL_BLEND));
 
 	va = new VertexArray;
-	vb = new VertexBuffer(positions, 4 * 5 * sizeof(float));
+	vb = new VertexBuffer(positions, 8 * 5 * sizeof(float));
 
 	layout = new VertexBufferLayout;
 	layout->Push<float>(3);
 	layout->Push<float>(2);
 	va->addBuffer(*vb, *layout);
 
-	ib = new IndexBuffer(indices, 6);
+	ib = new IndexBuffer(indices, 36);
 
 	//glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 	//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
