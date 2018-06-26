@@ -63,7 +63,7 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
-		Test::Test* currentTest = new Test::TestSimple3D;
+		Test::Test* currentTest = new Test::TestPerPixelBasicLigthing;
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, true);
