@@ -41,9 +41,11 @@ void main()
 
 	float dotp = dot(unitNormal, unitLightVector);
 	float bright = max(dotp, 0.0);
-
 	vec3 diffuse = bright * u_LColor;
 
-	vec4 texColor = vec4(diffuse, 1.0) * vec4(1.0, 0.0, 0.0, 1.0);
+	vec3 ambient = 0.1f * u_LColor;
+
+	vec4 texColor = vec4((ambient 
+		+ diffuse),1.0f) * vec4(1.0, 0.1, 0.1, 1.0);
 	color = texColor;
 }

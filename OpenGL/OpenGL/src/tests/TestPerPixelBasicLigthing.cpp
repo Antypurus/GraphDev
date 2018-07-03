@@ -114,7 +114,7 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 	this->rotationAngle = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	this->lightPosition = glm::vec3(480.0f, 270.0f, 500.0f);
-	this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	this->lightColor = glm::vec3(0.5f, 1.0f, 0.5f);
 
 	colorShader->SetUniform3f("u_LPosition", lightPosition.x, lightPosition.y, lightPosition.z);
 	colorShader->SetUniform3f("u_LColor", lightColor.x, lightColor.y, lightColor.z);
