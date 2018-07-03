@@ -56,30 +56,32 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 
 	ib = new IndexBuffer(indices, 36);
 
-	//glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-	//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-
 	glm::mat4 proj = glm::perspective(glm::radians(90.0f), 960.0f / 540.0f, 0.1f, 10000.0f);
 
 	glm::mat4 view = glm::lookAt(
-		glm::vec3(200.0f, 200.0f, 200.0f),			// the position of your camera, in world space
+		glm::vec3(200.0f, 200.0f, 200.0f),		// the position of your camera, in world space
 		glm::vec3(200.0f, 200.0f, 50.0f),		// where you want to look at, in world space
-		glm::vec3(0.0f, 1.0f, 0.0f)			// probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be great too
+		glm::vec3(0.0f, 1.0f, 0.0f)				// probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be great too
 	);
 
 	this->proj = proj;
 	this->view = view;
 
-	shader = new Shader("res/shaders/Basic.shader");
+	textureShader = new Shader("res/shaders/PPBL_Texture.shader");
+	colorShader = new Shader("res/shaders/PPBL_Color.shader");
 
 	texture = new Texture("res/textures/adromeda.png");
 	texture->Bind();
-	shader->SetUniform1i("u_Texture", 0);
+
+	textureShader->Bind();
+	textureShader->SetUniform1i("u_Texture", 0);
 
 	vb->Unbind();
 	ib->Unbind();
-	shader->Unbind();
+	textureShader->Unbind();
+	colorShader->Unbind();
 	va->Unbind();
+	texture->Unbind();
 
 	this->translation = glm::vec3(200, 200, 0);
 
@@ -92,7 +94,8 @@ Test::TestPerPixelBasicLigthing::~TestPerPixelBasicLigthing()
 	delete vb;
 	delete layout;
 	delete ib;
-	delete shader;
+	delete textureShader;
+	delete colorShader;
 	delete texture;
 	delete renderer;
 }
@@ -113,16 +116,32 @@ void Test::TestPerPixelBasicLigthing::OnRender()
 		model = glm::rotate(model, glm::radians(this->rotationAngle.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		glm::mat4 mvp = proj * view * model;
-		shader->Bind();
-		shader->SetUniformMat4f("u_MVP", mvp);
+
+		if (useTexture)
+		{
+			textureShader->SetUniformMat4f("u_MVP", mvp);
+		}
+		else
+		{
+			colorShader->SetUniformMat4f("u_MVP", mvp);
+		}
 	}
 
 	/* Draw A Triangle By issuing draw call to buffer */
-	renderer->Draw(*va, *ib, *shader);
+	if(useTexture)
+	{
+		renderer->Draw(*va, *ib, *textureShader);
+	}
+	else
+	{
+		renderer->Draw(*va, *ib, *colorShader);
+	}
 }
 
 void Test::TestPerPixelBasicLigthing::OnImGuiRender()
 {
+	bool curr = useTexture;
+
 	//Translation Controlls
 	ImGui::SliderFloat("Translation X axys", &translation.x, 0.0f, 960.0f);
 	ImGui::SliderFloat("Translation Y axys", &translation.y, 0.0f, 540.0f);
@@ -134,6 +153,25 @@ void Test::TestPerPixelBasicLigthing::OnImGuiRender()
 	ImGui::SliderFloat("X Angle", &rotationAngle.x, 0.0f, 360.0f);
 	ImGui::SliderFloat("Y Angle", &rotationAngle.y, 0.0f, 360.0f);
 	ImGui::SliderFloat("Z Angle", &rotationAngle.z, 0.0f, 360.0f);
+
+	ImGui::Separator();
+
+	//texture usage controll
+	ImGui::Checkbox("Use Texture", &useTexture);
+
+	if(useTexture!=curr)
+	{
+		if(useTexture)
+		{
+			textureShader->Bind();
+			texture->Bind();
+		}
+		else
+		{
+			colorShader->Bind();
+			texture->Unbind();
+		}
+	}
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }

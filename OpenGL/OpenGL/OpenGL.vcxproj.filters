@@ -423,6 +423,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="res\shaders\PPBL_Color.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -918,6 +919,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tests\TestPerPixelBasicLigthing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="res\shaders\PPBL_Texture.shader">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

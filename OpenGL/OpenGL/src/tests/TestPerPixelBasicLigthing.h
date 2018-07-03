@@ -19,7 +19,8 @@ namespace Test
 		VertexBuffer* vb;
 		VertexBufferLayout* layout;
 		IndexBuffer* ib;
-		Shader* shader;
+		Shader* textureShader;
+		Shader* colorShader;
 		Texture* texture;
 		Renderer* renderer;
 
@@ -28,6 +29,8 @@ namespace Test
 		glm::vec3 translation;
 
 		glm::vec3 rotationAngle;
+
+		bool useTexture = false;
 	public:
 		TestPerPixelBasicLigthing();
 		~TestPerPixelBasicLigthing();
