@@ -11,47 +11,74 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 	glEnable(GL_DEPTH_TEST);
 
 	float positions[] = {
-		-50.0f, -50.0f,  50.0f, 0.0f, 0.0f,   //0
-		 50.0f, -50.0f,  50.0f, 1.0f, 0.0f,   //1
-		 50.0f,  50.0f,  50.0f, 1.0f, 1.0f,   //2
-		-50.0f,  50.0f,  50.0f, 0.0f, 1.0f,	  //3
+		//front face
+		-50.0f, -50.0f,  50.0f, 0.0f, 0.0f,  1.0f,0.0f,0.0f,  //0
+		 50.0f, -50.0f,  50.0f, 1.0f, 0.0f,  1.0f,0.0f,0.0f,  //1
+		 50.0f,  50.0f,  50.0f, 1.0f, 1.0f,  1.0f,0.0f,0.0f,  //2
+		-50.0f,  50.0f,  50.0f, 0.0f, 1.0f,	 1.0f,0.0f,0.0f,  //3
 
-		-50.0f, -50.0f, -50.0f, 0.0f, 1.0f,   //4
-		 50.0f, -50.0f, -50.0f, 1.0f, 1.0f,   //5
-		 50.0f,  50.0f, -50.0f, 1.0f, 0.0f,   //6
-		-50.0f,  50.0f, -50.0f, 0.0f, 0.0f	  //7
+		//back face
+		-50.0f, -50.0f, -50.0f, 0.0f, 1.0f, -1.0f,0.0f,0.0f,  //4
+		 50.0f, -50.0f, -50.0f, 1.0f, 1.0f, -1.0f,0.0f,0.0f,  //5
+		 50.0f,  50.0f, -50.0f, 1.0f, 0.0f, -1.0f,0.0f,0.0f,  //6
+		-50.0f,  50.0f, -50.0f, 0.0f, 0.0f, -1.0f,0.0f,0.0f,  //7
+
+		//top face
+		-50.0f,  50.0f, -50.0f, 0.0f, 1.0f,  0.0f,1.0f,0.0f, //8
+		 50.0f,  50.0f, -50.0f, 1.0f, 1.0f,  0.0f,1.0f,0.0f, //9
+		 50.0f,  50.0f,  50.0f, 1.0f, 0.0f,  0.0f,1.0f,0.0f, //10
+		-50.0f,  50.0f,  50.0f, 0.0f, 0.0f,  0.0f,1.0f,0.0f, //11
+
+		//bottom face
+		-50.0f, -50.0f, -50.0f, 0.0f, 1.0f,  0.0f,-1.0f,0.0f,  //12
+		 50.0f, -50.0f, -50.0f, 1.0f, 1.0f,  0.0f,-1.0f,0.0f,  //13
+		 50.0f, -50.0f,  50.0f, 1.0f, 0.0f,  0.0f,-1.0f,0.0f,  //14
+		-50.0f, -50.0f,  50.0f, 0.0f, 0.0f,  0.0f,-1.0f,0.0f,  //15
+
+		//left face
+		-50.0f, -50.0f, -50.0f, 0.0f, 1.0f,  0.0f,0.0f,-1.0f,  //16
+		-50.0f, -50.0f,  50.0f, 1.0f, 1.0f,  0.0f,0.0f,-1.0f,  //17
+		-50.0f,  50.0f,  50.0f, 1.0f, 0.0f,  0.0f,0.0f,-1.0f,  //18
+		-50.0f,  50.0f, -50.0f, 0.0f, 0.0f,  0.0f,0.0f,-1.0f,  //19
+
+		//right face
+		 50.0f, -50.0f, -50.0f, 0.0f, 1.0f, 0.0f,0.0f,1.0f,   //20
+		 50.0f, -50.0f,  50.0f, 1.0f, 1.0f, 0.0f,0.0f,1.0f,   //21
+		 50.0f,  50.0f,  50.0f, 1.0f, 0.0f, 0.0f,0.0f,1.0f,   //22
+		 50.0f,  50.0f, -50.0f, 0.0f, 0.0f, 0.0f,0.0f,1.0f,   //23
 	};
 
 	unsigned int indices[] = {
 		// front
 		0, 1, 2,
 		2, 3, 0,
-		// top
-		3, 2, 6,
-		6, 7, 3,
 		// back
 		7, 6, 5,
 		5, 4, 7,
-		// bottom
-		4, 5, 1,
-		1, 0, 4,
-		// left
-		4, 0, 3,
-		3, 7, 4,
-		// right
-		1, 5, 6,
-		6, 2, 1,
+		//top
+		10,9,11,
+		11,9,8,
+		//bottom
+		14,15,13,
+		15,12,13,
+		//left
+		18,19,16,
+		18,16,17,
+		//right
+		22,20,21,
+		22,23,20
 	};
 
 	GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	GlCall(glEnable(GL_BLEND));
 
 	va = new VertexArray;
-	vb = new VertexBuffer(positions, 8 * 5 * sizeof(float));
+	vb = new VertexBuffer(positions, 24 * 8 * sizeof(float));
 
 	layout = new VertexBufferLayout;
-	layout->Push<float>(3);
-	layout->Push<float>(2);
+	layout->Push<float>(3);//vertex positions
+	layout->Push<float>(2);//texture coordinates
+	layout->Push<float>(3);//normal coordinates
 	va->addBuffer(*vb, *layout);
 
 	ib = new IndexBuffer(indices, 36);
@@ -84,8 +111,13 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 	texture->Unbind();
 
 	this->translation = glm::vec3(200, 200, 0);
-
 	this->rotationAngle = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	this->lightPosition = glm::vec3(480.0f, 270.0f, 500.0f);
+	this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	colorShader->SetUniform3f("u_LPosition", lightPosition.x, lightPosition.y, lightPosition.z);
+	colorShader->SetUniform3f("u_LColor", lightColor.x, lightColor.y, lightColor.z);
 }
 
 Test::TestPerPixelBasicLigthing::~TestPerPixelBasicLigthing()

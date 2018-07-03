@@ -31,8 +31,14 @@ namespace Test
 		glm::vec3 rotationAngle;
 
 		bool useTexture = false;
+		
+		//caching mechanisms
 		bool textureCache = false;
 		glm::mat4 mvp;
+
+		//light
+		glm::vec3 lightPosition;
+		glm::vec3 lightColor;
 	public:
 		TestPerPixelBasicLigthing();
 		~TestPerPixelBasicLigthing();
