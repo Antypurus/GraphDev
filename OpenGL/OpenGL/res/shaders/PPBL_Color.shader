@@ -12,14 +12,16 @@ out vec3 v_ToLightVector;
 uniform mat4 u_MVP;
 uniform vec3 u_LPosition;
 
+uniform mat4 u_Model;
+
 void main()
 {
 	// this is missing the accounting of transformations in the normals position outputs since this shader is not ready for that
 	gl_Position = u_MVP * position;
 	v_TexCoord = texCoord;
 
-	v_SurfaceNormal = normals;
-	v_ToLightVector = u_LPosition - position.xyz;
+	v_SurfaceNormal = (u_Model * vec4(normals,0.0)).xyz;
+	v_ToLightVector = u_LPosition - (u_Model * position).xyz;
 }
 
 #shader fragment
@@ -45,7 +47,6 @@ void main()
 
 	vec3 ambient = 0.1f * u_LColor;
 
-	vec4 texColor = vec4((ambient 
-		+ diffuse),1.0f) * vec4(1.0, 0.1, 0.1, 1.0);
+	vec4 texColor = vec4((ambient + diffuse),1.0f) * vec4(1.0, 0.1, 0.1, 1.0);
 	color = texColor;
 }
