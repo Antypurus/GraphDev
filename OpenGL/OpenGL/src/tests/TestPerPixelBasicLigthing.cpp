@@ -56,10 +56,10 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 
 	ib = new IndexBuffer(indices, 36);
 
-	glm::mat4 proj = glm::perspective(glm::radians(100.0f), 960.0f / 540.0f, 0.1f, 10000.0f);
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 10000.0f);
 
 	glm::mat4 view = glm::lookAt(
-		glm::vec3(480.0f, 270.0f, 200.0f),		// the position of your camera, in world space
+		glm::vec3(480.0f, 270.0f, 500.0f),		// the position of your camera, in world space
 		glm::vec3(480.0f, 270.0f, 0.0f),		// where you want to look at, in world space
 		glm::vec3(0.0f, 1.0f, 0.0f)				// probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be great too
 	);
