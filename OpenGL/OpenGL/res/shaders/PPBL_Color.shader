@@ -16,7 +16,6 @@ uniform mat4 u_Model;
 
 void main()
 {
-	// this is missing the accounting of transformations in the normals position outputs since this shader is not ready for that
 	gl_Position = u_MVP * position;
 	v_TexCoord = texCoord;
 

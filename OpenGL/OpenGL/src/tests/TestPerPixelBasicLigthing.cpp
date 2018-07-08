@@ -11,6 +11,7 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 	glEnable(GL_DEPTH_TEST);
 
 	float positions[] = {
+		// { Pos.x, Pos.y, Pos.z} {Text.u, Text.v} {Norm.x, Norm.y, Norm.z}
 		//front face
 		-50.0f, -50.0f,  50.0f, 0.0f, 0.0f,  0.0f,0.0f,1.0f,  //0
 		 50.0f, -50.0f,  50.0f, 1.0f, 0.0f,  0.0f,0.0f,1.0f,  //1
@@ -114,10 +115,13 @@ Test::TestPerPixelBasicLigthing::TestPerPixelBasicLigthing()
 	this->rotationAngle = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	this->lightPosition = glm::vec3(480.0f, 270.0f, 500.0f);
-	this->lightColor = glm::vec3(0.5f, 1.0f, 0.5f);
+	this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	colorShader->SetUniform3f("u_LPosition", lightPosition.x, lightPosition.y, lightPosition.z);
 	colorShader->SetUniform3f("u_LColor", lightColor.x, lightColor.y, lightColor.z);
+
+	textureShader->SetUniform3f("u_LPosition", lightPosition.x, lightPosition.y, lightPosition.z);
+	textureShader->SetUniform3f("u_LColor", lightColor.x, lightColor.y, lightColor.z);
 }
 
 Test::TestPerPixelBasicLigthing::~TestPerPixelBasicLigthing()
@@ -165,6 +169,7 @@ void Test::TestPerPixelBasicLigthing::OnRender()
 		}
 
 		colorShader->SetUniformMat4f("u_Model", model);
+		textureShader->SetUniformMat4f("u_Model", model);
 	}
 
 	/* Draw A Triangle By issuing draw call to buffer */
