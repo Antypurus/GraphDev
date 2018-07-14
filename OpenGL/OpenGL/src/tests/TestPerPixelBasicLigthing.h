@@ -39,6 +39,8 @@ namespace Test
 		//light
 		glm::vec3 lightPosition;
 		glm::vec3 lightColor;
+
+		float rotation = 0;
 	public:
 		TestPerPixelBasicLigthing();
 		~TestPerPixelBasicLigthing();
