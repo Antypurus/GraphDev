@@ -150,17 +150,16 @@ void Test::TestPerPixelBasicLigthing::OnRender()
 		model = glm::rotate(model, glm::radians(this->rotationAngle.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotationAngle.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotationAngle.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
 
 		glm::vec3 camVec = glm::vec3(0.0f, 0.0f, -500.0f);
 
 		glm::vec4 lookingPos =glm::rotate(glm::mat4(1.0f), glm::radians(this->rotation), glm::vec3(0.0f, 1.0f, 0.0f))*glm::vec4(camVec, 0.0f);
-		
-		printf("X:%f, Y:%f, Z:%f\n", lookingPos.x, lookingPos.y, lookingPos.z);
 
 		view = glm::lookAt(
-			glm::vec3(480.0f, 270.0f, 500.0f),		// the position of your camera, in world space
+			glm::vec3(480.0f, 270.0f, 500.0f),													// the position of your camera, in world space
 			glm::vec3(480.0f + lookingPos.x, 270.0f + lookingPos.y, 500.0f + lookingPos.z),		// where you want to look at, in world space
-			glm::vec3(0.0f, 1.0f, 0.0f)				// probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be grea too
+			glm::vec3(0.0f, 1.0f, 0.0f)															// probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be grea too
 		);
 
 		glm::mat4 mvp = proj * view * model;
@@ -181,6 +180,10 @@ void Test::TestPerPixelBasicLigthing::OnRender()
 		}
 
 		colorShader->SetUniformMat4f("u_Model", model);
+		colorShader->SetUniform1f("shineDamper", damper);
+		colorShader->SetUniform1f("reflectivity", reflectivity);
+		colorShader->SetUniformMat4f("u_View", view);
+		colorShader->SetUniform3f("u_CameraPos", 480.0f, 270.0f, 500.0f);
 		textureShader->SetUniformMat4f("u_Model", model);
 	}
 
@@ -215,11 +218,20 @@ void Test::TestPerPixelBasicLigthing::OnImGuiRender()
 
 	ImGui::Separator();
 
+	ImGui::SliderFloat("Scale", &scale, 0.1f, 100.0f);
+
+	ImGui::Separator();
+
 	//camera controll
 	ImGui::SliderFloat("Horizontal Rotation", &rotation,-360.0f, 360.0f);
 
-	ImGui::ColorPicker3("Light Color", &lightColor.x);
+	ImGui::Separator();
 
+	ImGui::SliderFloat("Dampening Factor", &damper, 1.0f, 100.0f);
+	ImGui::SliderFloat("Reflectivity Factor", &reflectivity, 0.0f, 10.0f);
+
+	ImGui::Separator();
+	ImGui::ColorPicker3("Light Color", &lightColor.x);
 	ImGui::Separator();
 
 	//texture usage controll

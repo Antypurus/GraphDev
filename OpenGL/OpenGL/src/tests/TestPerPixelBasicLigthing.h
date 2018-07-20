@@ -15,7 +15,7 @@ namespace Test
 	class TestPerPixelBasicLigthing : public Test
 	{
 	private:
-		VertexArray * va;
+		VertexArray* va;
 		VertexBuffer* vb;
 		VertexBufferLayout* layout;
 		IndexBuffer* ib;
@@ -30,6 +30,8 @@ namespace Test
 
 		glm::vec3 rotationAngle;
 
+		float scale = 1.0f;
+
 		bool useTexture = false;
 		
 		//caching mechanisms
@@ -41,6 +43,9 @@ namespace Test
 		glm::vec3 lightColor;
 
 		float rotation = 0;
+
+		float damper = 10;
+		float reflectivity = 1;
 	public:
 		TestPerPixelBasicLigthing();
 		~TestPerPixelBasicLigthing();
