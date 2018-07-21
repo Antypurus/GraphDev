@@ -12,6 +12,7 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestSimple3D.h"
 #include "tests/TestPerPixelBasicLigthing.h"
+#include "tests/DirectionalLightTest.h"
 
 bool drawGui = true;
 
@@ -63,7 +64,7 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
-		Test::Test* currentTest = new Test::TestPerPixelBasicLigthing;
+		Test::Test* currentTest = new Test::DirectionalLightTest;
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, true);
@@ -104,6 +105,11 @@ int main(void)
 						{
 							delete currentTest;
 							currentTest = new Test::TestPerPixelBasicLigthing;
+						}
+						if (ImGui::MenuItem("Directional Lighing Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::DirectionalLightTest;
 						}
 						ImGui::EndMenu();
 					}
