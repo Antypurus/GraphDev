@@ -38,7 +38,7 @@ struct BaseLight
 struct DirectionalLight
 {
 	BaseLight base;
-	vec3 direction;
+	vec3 position;
 };
 
 uniform vec3 eyePos;
@@ -50,9 +50,10 @@ uniform DirectionalLight u_DirectionalLight;
 uniform float specularIntensity;
 uniform float specularExponent;
 
-vec4 calcLight(BaseLight base, vec3 direction, vec3 normal)
+vec4 calcLight(BaseLight base, vec3 position, vec3 normal)
 {
-	float diffuseFactor = dot(normal,-direction);
+	vec3 direction = normalize(WorldPosition - position);
+	float diffuseFactor = max(dot(normal,-direction),0);
 	vec4 diffuseColor = vec4(0,0,0,0);
 	vec4 specularColor = vec4(0,0,0,0);
 	
@@ -64,7 +65,7 @@ vec4 calcLight(BaseLight base, vec3 direction, vec3 normal)
 	vec3 directionToEye = normalize(eyePos - WorldPosition);
 	vec3 reflectDirection = normalize(reflect(direction,normal));
 
-	float specularFactor = dot(directionToEye,reflectDirection);
+	float specularFactor = max(dot(directionToEye,reflectDirection),0);
 	specularFactor = pow(specularFactor,specularExponent);
 
 	if(specularFactor>0)
@@ -77,7 +78,7 @@ vec4 calcLight(BaseLight base, vec3 direction, vec3 normal)
 
 vec4 calcDirectionalLight(DirectionalLight directionalLight,vec3 normal)
 {
-	return calcLight(directionalLight.base,-directionalLight.direction,normal);
+	return calcLight(directionalLight.base,directionalLight.position,normal);
 }
 
 void main()

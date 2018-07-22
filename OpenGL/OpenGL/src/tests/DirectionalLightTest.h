@@ -27,14 +27,14 @@ struct BaseLight
 struct DirectionalLight
 {
 	BaseLight base;
-	glm::vec3 direction;
+	glm::vec3 position;
 
 	void sendToShader(const std::string& name,Shader& shader)
 	{
 		shader.Bind();
 		shader.SetUniform3f(name + ".base.color", base.color.x, base.color.y, base.color.z);
 		shader.SetUniform1f(name + ".base.intensity", base.intensity);
-		shader.SetUniform3f(name + ".direction", direction.x, direction.y, direction.z);
+		shader.SetUniform3f(name + ".position", position.x, position.y, position.z);
 	}
 };
 
