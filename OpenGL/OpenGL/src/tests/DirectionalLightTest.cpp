@@ -96,6 +96,7 @@ Test::DirectionalLightTest::DirectionalLightTest()
 	this->view = view;
 
 	shader = new Shader("res/shaders/Directional_Light.shader");
+	shader->SetUniform3f("u_BaseColor", ambientColor[0], ambientColor[1], ambientColor[2]);
 
 	texture = new Texture("res/textures/adromeda.png");
 	texture->Bind();
@@ -151,6 +152,18 @@ void Test::DirectionalLightTest::OnRender()
 
 		glm::mat4 mvp = proj * view * model;
 		shader->SetUniformMat4f("u_MVP", mvp);
+		shader->SetUniform3f("u_AmbientLight", ambientColor[0], ambientColor[1], ambientColor[2]);
+		shader->SetUniformMat4f("u_Model", model);
+		shader->SetUniform3f("eyePos", 480.0f, 270.0f, 500.0f);
+		shader->SetUniform1f("specularIntensity", specularIntensity);
+		shader->SetUniform1f("specularExponent", specularExponent);
+
+		DirectionalLight light;
+		light.base.intensity = intensity;
+		light.base.color = glm::vec3(ambientColor[0], ambientColor[1], ambientColor[2]);
+		light.direction = normalize(glm::vec3(0.1, 0.1, 0.1));
+
+		light.sendToShader("u_DirectionalLight", *shader);
 	}
 
 	renderer->Draw(*va, *ib, *shader);
@@ -178,6 +191,14 @@ void Test::DirectionalLightTest::OnImGuiRender()
 
 	//camera controll
 	ImGui::SliderFloat("Horizontal Rotation", &rotation, -360.0f, 360.0f);
+
+	ImGui::Separator();
+
+	//Lighting Controlls
+	ImGui::SliderFloat("Light Intensity", &intensity, 0.0f, 100.0f);
+	ImGui::SliderFloat("Specular Intensity", &specularIntensity,0.0f,100.0f);
+	ImGui::SliderFloat("Specular Exponent", &specularExponent, 0.0f, 10.0f);
+	ImGui::ColorPicker3("Ambient Light Color", ambientColor);
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
