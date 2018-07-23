@@ -55,6 +55,8 @@ struct PointLight
 	BaseLight base;
 	Attenuation atten;
 	vec3 position;
+	float range;
+	int activated;
 };
 
 uniform vec3 eyePos;
@@ -102,6 +104,11 @@ vec4 calcPointLight(PointLight pointLight, vec3 normal)
 {
 	float distanceToPoint = length(WorldPosition - pointLight.position);
 
+	if (distanceToPoint > pointLight.range)
+	{
+		return vec4(0,0,0,0);
+	}
+
 	vec4 color = calcLight(pointLight.base,pointLight.position,normal);
 
 	float attenuation = pointLight.atten.constant + pointLight.atten.linear * distanceToPoint + pointLight.atten.exponent * distanceToPoint * distanceToPoint;
@@ -109,7 +116,7 @@ vec4 calcPointLight(PointLight pointLight, vec3 normal)
 	if (attenuation < 1)
 	{
 		attenuation = 1;
-	}
+	} 
 
 	return color/ attenuation;
 }
@@ -122,9 +129,12 @@ void main()
 
 	vec3 normal = normalize(v_Normal);
 	
-	for(int i=0 ; i<MAX_POINT_LIGHTS ; i++)
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
 	{
-		totalLight += calcPointLight(pointLights[i],normal);
+		if (pointLights[i].activated == 1)
+		{
+			totalLight += calcPointLight(pointLights[i], normal);
+		}
 	}
 
 	endColor *= texture;

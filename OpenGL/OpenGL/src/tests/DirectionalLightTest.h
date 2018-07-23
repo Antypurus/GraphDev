@@ -44,6 +44,8 @@ struct PointLight
 	BaseLight base;
 	glm::vec3 position;
 	Attenuation attenuation;
+	float range;
+	int activated = 1;
 
 	void sendToShader(const std::string& name,Shader& shader)
 	{
@@ -52,6 +54,8 @@ struct PointLight
 		shader.SetUniform1f(name + ".base.intensity", base.intensity);
 		shader.SetUniform3f(name + ".position", position.x, position.y, position.z);
 		attenuation.sendToShader(name + ".atten", shader);
+		shader.SetUniform1f(name + ".range", range);
+		shader.SetUniform1i(name + ".activated", activated);
 	}
 };
 
@@ -88,6 +92,7 @@ namespace Test
 		float specularExponent = 1.0f;
 
 		Attenuation atten = { 1.0f,1.0f,1.0f };
+		float lightRange = 10000.0f;
 	public:
 		DirectionalLightTest();
 		~DirectionalLightTest();

@@ -164,6 +164,7 @@ void Test::DirectionalLightTest::OnRender()
 		light.position = glm::vec3(480.0f, 270.0f, 500.0f);
 
 		light.attenuation = atten;
+		light.range = lightRange;
 
 		light.sendToShader("pointLights[0]", *shader);
 	}
@@ -204,6 +205,8 @@ void Test::DirectionalLightTest::OnImGuiRender()
 	ImGui::SliderFloat("Ligth Attenuation Constant", &atten.constant, 0.0f, 100.0f);
 	ImGui::SliderFloat("Ligth Attenuation Linear", &atten.linear, 0.0f, 100.0f);
 	ImGui::SliderFloat("Ligth Attenuation Exponent", &atten.exponent, 0.0f, 100.0f);
+
+	ImGui::SliderFloat("Ligth Range", &lightRange, 0.0f, 10000.0f);
 
 	ImGui::ColorPicker3("Ambient Light Color", ambientColor);
 
