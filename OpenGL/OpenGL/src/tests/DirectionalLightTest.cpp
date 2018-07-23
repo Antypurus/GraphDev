@@ -158,12 +158,14 @@ void Test::DirectionalLightTest::OnRender()
 		shader->SetUniform1f("specularIntensity", specularIntensity);
 		shader->SetUniform1f("specularExponent", specularExponent);
 
-		DirectionalLight light;
+		PointLight light;
 		light.base.intensity = intensity;
 		light.base.color = glm::vec3(ambientColor[0], ambientColor[1], ambientColor[2]);
 		light.position = glm::vec3(480.0f, 270.0f, 500.0f);
 
-		light.sendToShader("u_DirectionalLight", *shader);
+		light.attenuation = atten;
+
+		light.sendToShader("pointLights[0]", *shader);
 	}
 
 	renderer->Draw(*va, *ib, *shader);
@@ -195,9 +197,14 @@ void Test::DirectionalLightTest::OnImGuiRender()
 	ImGui::Separator();
 
 	//Lighting Controlls
-	ImGui::SliderFloat("Light Intensity", &intensity, 0.0f, 100.0f);
-	ImGui::SliderFloat("Specular Intensity", &specularIntensity,0.0f,100.0f);
-	ImGui::SliderFloat("Specular Exponent", &specularExponent, 0.0f, 100.0f);
+	ImGui::SliderFloat("Light Intensity", &intensity, 0.0f, 1000.0f);
+	ImGui::SliderFloat("Specular Intensity", &specularIntensity,0.0f,1000.0f);
+	ImGui::SliderFloat("Specular Exponent", &specularExponent, 0.0f, 10.0f);
+
+	ImGui::SliderFloat("Ligth Attenuation Constant", &atten.constant, 0.0f, 100.0f);
+	ImGui::SliderFloat("Ligth Attenuation Linear", &atten.linear, 0.0f, 100.0f);
+	ImGui::SliderFloat("Ligth Attenuation Exponent", &atten.exponent, 0.0f, 100.0f);
+
 	ImGui::ColorPicker3("Ambient Light Color", ambientColor);
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

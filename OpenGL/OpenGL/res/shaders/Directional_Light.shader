@@ -23,11 +23,13 @@ void main()
 #shader fragment
 #version 330 core
 
-out vec4 color;
+const int MAX_POINT_LIGHTS = 4;
 
 in vec2 v_TexCoord;
 in vec3 v_Normal;
 in vec3 WorldPosition;
+
+out vec4 color;
 
 struct BaseLight
 {
@@ -41,11 +43,26 @@ struct DirectionalLight
 	vec3 position;
 };
 
+struct Attenuation
+{
+	float constant;
+	float linear;
+	float exponent;
+};
+
+struct PointLight
+{
+	BaseLight base;
+	Attenuation atten;
+	vec3 position;
+};
+
 uniform vec3 eyePos;
 uniform vec3 u_BaseColor;
 uniform vec3 u_AmbientLight;
 uniform sampler2D u_Texture;
-uniform DirectionalLight u_DirectionalLight;
+//uniform DirectionalLight u_DirectionalLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 uniform float specularIntensity;
 uniform float specularExponent;
@@ -81,6 +98,22 @@ vec4 calcDirectionalLight(DirectionalLight directionalLight,vec3 normal)
 	return calcLight(directionalLight.base,directionalLight.position,normal);
 }
 
+vec4 calcPointLight(PointLight pointLight, vec3 normal)
+{
+	float distanceToPoint = length(WorldPosition - pointLight.position);
+
+	vec4 color = calcLight(pointLight.base,pointLight.position,normal);
+
+	float attenuation = pointLight.atten.constant + pointLight.atten.linear * distanceToPoint + pointLight.atten.exponent * distanceToPoint * distanceToPoint;
+
+	if (attenuation < 1)
+	{
+		attenuation = 1;
+	}
+
+	return color/ attenuation;
+}
+
 void main()
 {
 	vec4 totalLight = vec4(0,0,0,1);
@@ -88,7 +121,11 @@ void main()
 	vec4 texture = texture(u_Texture, v_TexCoord);
 
 	vec3 normal = normalize(v_Normal);
-	totalLight+=calcDirectionalLight(u_DirectionalLight,normal);
+	
+	for(int i=0 ; i<MAX_POINT_LIGHTS ; i++)
+	{
+		totalLight += calcPointLight(pointLights[i],normal);
+	}
 
 	endColor *= texture;
 
