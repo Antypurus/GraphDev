@@ -166,7 +166,12 @@ void Test::DirectionalLightTest::OnRender()
 		light.attenuation = atten;
 		light.range = lightRange;
 
-		light.sendToShader("pointLights[0]", *shader);
+		SpotLight spot;
+		spot.pointLight = light;
+		spot.direction = glm::vec3(spotLightDirection[0], spotLightDirection[1], spotLightDirection[2]);
+		spot.cutoff = cuttoff;
+
+		spot.sendToShader("spotLights[0]", *shader);
 	}
 
 	renderer->Draw(*va, *ib, *shader);
@@ -207,6 +212,9 @@ void Test::DirectionalLightTest::OnImGuiRender()
 	ImGui::SliderFloat("Ligth Attenuation Exponent", &atten.exponent, 0.0f, 100.0f);
 
 	ImGui::SliderFloat("Ligth Range", &lightRange, 0.0f, 10000.0f);
+
+	ImGui::SliderFloat3("SpotLight Direction", &spotLightDirection[0], -1.0f, 1.0f);
+	ImGui::SliderFloat("Spot Light cutoff", &cuttoff, -1.0f, 1.0f);
 
 	ImGui::ColorPicker3("Ambient Light Color", ambientColor);
 

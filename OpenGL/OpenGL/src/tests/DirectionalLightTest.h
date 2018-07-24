@@ -59,6 +59,22 @@ struct PointLight
 	}
 };
 
+struct SpotLight
+{
+	PointLight pointLight;
+	glm::vec3 direction;
+	float cutoff;
+
+	void sendToShader(const std::string& name, Shader& shader)
+	{
+		direction = normalize(direction);
+		shader.Bind();
+		pointLight.sendToShader(name + ".pointLight", shader);
+		shader.SetUniform3f(name + ".direction", direction.x, direction.y, direction.z);
+		shader.SetUniform1f(name + ".cutoff", cutoff);
+	}
+};
+
 namespace Test
 {
 	class DirectionalLightTest:public Test
@@ -87,12 +103,15 @@ namespace Test
 
 		//lighting
 		float ambientColor[3] = { 1.0f,1.0f,1.0f };
-		float intensity = 1.0f;
-		float specularIntensity = 1.0f;
-		float specularExponent = 1.0f;
+		float intensity = 10.0f;
+		float specularIntensity = 0.0f;
+		float specularExponent = 0.0f;
 
-		Attenuation atten = { 1.0f,1.0f,1.0f };
+		Attenuation atten = { 1.0f,0.0f,0.0f };
 		float lightRange = 10000.0f;
+
+		float spotLightDirection[3] = { 0.0f,0.0f,1.0f };
+		float cuttoff = 0.0f;
 	public:
 		DirectionalLightTest();
 		~DirectionalLightTest();
