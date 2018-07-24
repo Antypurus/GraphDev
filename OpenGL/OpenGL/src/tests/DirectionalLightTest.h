@@ -110,7 +110,7 @@ namespace Test
 		Attenuation atten = { 1.0f,0.0f,0.0f };
 		float lightRange = 10000.0f;
 
-		float spotLightDirection[3] = { 0.0f,0.0f,1.0f };
+		float spotLightDirection[3] = { 0.0f,0.0f,-1.0f };
 		float cuttoff = 0.0f;
 	public:
 		DirectionalLightTest();
