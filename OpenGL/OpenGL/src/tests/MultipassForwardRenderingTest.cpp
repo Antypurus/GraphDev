@@ -95,17 +95,21 @@ Test::MultipassForwardRenderingTest::MultipassForwardRenderingTest()
 	this->proj = proj;
 	this->view = view;
 
-	shader = new Shader("res/shaders/Forward Shaders/Forward-Ambient.shader");
+	ambientShader = new Shader("res/shaders/Forward Shaders/Forward-Ambient.shader");
+	directionalLightShader = new Shader("res/shaders/Forward Shaders/Forward-Directional.shader");
 
 	texture = new Texture("res/textures/adromeda.png");
 	texture->Bind();
 
-	shader->Bind();
-	shader->SetUniform1i("u_Texture", 0);
+	ambientShader->Bind();
+	ambientShader->SetUniform1i("u_Texture", 0);
+
+	directionalLightShader->Bind();
+	directionalLightShader->SetUniform1i("u_Texture", 0);
 
 	vb->Unbind();
 	ib->Unbind();
-	shader->Unbind();
+	ambientShader->Unbind();
 	va->Unbind();
 	//texture->Unbind();
 
@@ -119,9 +123,10 @@ Test::MultipassForwardRenderingTest::~MultipassForwardRenderingTest()
 	delete vb;
 	delete layout;
 	delete ib;
-	delete shader;
+	delete ambientShader;
 	delete texture;
 	delete renderer;
+	delete directionalLightShader;
 }
 
 void Test::MultipassForwardRenderingTest::OnUpdate(float deltaTime)
@@ -150,11 +155,29 @@ void Test::MultipassForwardRenderingTest::OnRender()
 		);
 
 		glm::mat4 mvp = proj * view * model;
-		shader->SetUniformMat4f("u_MVP", mvp);
-		shader->SetUniform3f("AmbientIntensity", AmbientLightIntensity[0], AmbientLightIntensity[1], AmbientLightIntensity[2]);
+		ambientShader->SetUniformMat4f("u_MVP", mvp);
+		ambientShader->SetUniform3f("AmbientIntensity", AmbientLightIntensity[0], AmbientLightIntensity[1], AmbientLightIntensity[2]);
+		
+		directionalLightShader->SetUniformMat4f("u_MVP", mvp);
+		directionalLightShader->SetUniformMat4f("u_Model", model);
+		directionalLightShader->SetUniform3f("eyePos", 480.0f, 270.0f, 500.0f);
+		directionalLight.sendToShader("u_DirectionalLight", *directionalLightShader);
+		directionalLightShader->SetUniform1f("specularIntensity", specularIntensity);
+		directionalLightShader->SetUniform1f("specularExponent", specularDampening);
 	}
 
-	renderer->Draw(*va, *ib, *shader);
+	renderer->Draw(*va, *ib, *ambientShader);
+
+	GlCall(glEnable(GL_BLEND));
+	GlCall(glBlendFunc(GL_ONE, GL_ONE));
+	GlCall(glDepthMask(GL_FALSE));
+	GlCall(glDepthFunc(GL_EQUAL));
+
+	renderer->Draw(*va, *ib, *directionalLightShader);
+
+	GlCall(glDepthFunc(GL_LESS));
+	GlCall(glDepthMask(GL_TRUE));
+	GlCall(glDisable(GL_BLEND));
 }
 
 void Test::MultipassForwardRenderingTest::OnImGuiRender()
@@ -182,7 +205,18 @@ void Test::MultipassForwardRenderingTest::OnImGuiRender()
 
 	ImGui::Separator();
 
-	ImGui::ColorPicker3("Ambient Light Intensity", &AmbientLightIntensity[0]);
+	//Light Controll - Ambient
+
+	ImGui::ColorPicker3("Ambient Light Color", &AmbientLightIntensity[0]);
+
+	ImGui::Separator();
+
+	//Light Controll - Directional
+	ImGui::SliderFloat("Diffuse Light Intensity", &directionalLight.base.intensity, 0.0f, 100.0f);
+	ImGui::SliderFloat3("Specular Light Direction", &directionalLight.direction.x, -1.0f, 1.0f);
+	ImGui::SliderFloat("Specular Light Intensity", &specularIntensity,0.0f,100.0f);
+	ImGui::SliderFloat("Specular Light Dampening", &specularDampening, 0.0f, 100.0f);
+
 
 	ImGui::Separator();
 

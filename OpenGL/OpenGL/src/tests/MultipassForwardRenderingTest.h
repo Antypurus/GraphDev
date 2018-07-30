@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Test.h"
 #include "glm/glm.hpp"
+#include <string>
+#include "../Shader.h"
 
 class VertexArray;
 class VertexBuffer;
@@ -8,7 +10,36 @@ class VertexBufferLayout;
 class IndexBuffer;
 class Texture;
 class Renderer;
-class Shader;
+
+namespace Test
+{
+	struct BaseLight
+	{
+		glm::vec3 color;
+		float intensity;
+
+		void sendToShader(const std::string& name, Shader& shader)
+		{
+			shader.Bind();
+			shader.SetUniform3f(name + ".color", color.x, color.y, color.z);
+			shader.SetUniform1f(name + ".intensity", intensity);
+		}
+	};
+
+	struct DirectionalLight
+	{
+		BaseLight base;
+		glm::vec3 direction;
+
+		void sendToShader(const std::string& name, Shader& shader)
+		{
+			shader.Bind();
+			shader.SetUniform3f(name + ".base.color", base.color.x, base.color.y, base.color.z);
+			shader.SetUniform1f(name + ".base.intensity", base.intensity);
+			shader.SetUniform3f(name + ".direction", direction.x, direction.y, direction.z);
+		}
+	};
+}
 
 namespace  Test
 {
@@ -19,7 +50,10 @@ namespace  Test
 		VertexBuffer* vb;
 		VertexBufferLayout* layout;
 		IndexBuffer* ib;
-		Shader* shader;
+
+		Shader* ambientShader;
+		Shader* directionalLightShader;
+
 		Texture* texture;
 		Renderer* renderer;
 
@@ -38,6 +72,11 @@ namespace  Test
 
 		//Lighthing Controlls
 		float AmbientLightIntensity[3] = { 1.0f,1.0f,1.0f };
+
+		DirectionalLight directionalLight = { { glm::vec3(1.0f,1.0f,1.0f),1.0f },glm::vec3(-1,1,-1) };
+
+		float specularIntensity = 10.0f;
+		float specularDampening = 1.0f;
 	public:
 		MultipassForwardRenderingTest();
 		~MultipassForwardRenderingTest();

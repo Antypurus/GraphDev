@@ -160,6 +160,7 @@
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\Directional_Light.shader" />
     <None Include="res\shaders\Forward Shaders\Forward-Ambient.shader" />
+    <None Include="res\shaders\Forward Shaders\Forward-Directional.shader" />
     <None Include="res\shaders\PPBL_Color.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
