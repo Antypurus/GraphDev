@@ -13,6 +13,7 @@
 #include "tests/TestSimple3D.h"
 #include "tests/TestPerPixelBasicLigthing.h"
 #include "tests/DirectionalLightTest.h"
+#include "tests/MultipassForwardRenderingTest.h"
 
 bool drawGui = true;
 
@@ -64,7 +65,7 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << "\n";
 	{
-		Test::Test* currentTest = new Test::DirectionalLightTest;
+		Test::Test* currentTest = new Test::MultipassForwardRenderingTest;
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, true);
@@ -110,6 +111,11 @@ int main(void)
 						{
 							delete currentTest;
 							currentTest = new Test::DirectionalLightTest;
+						}
+						if (ImGui::MenuItem("Multipass Forward Rendering Test"))
+						{
+							delete currentTest;
+							currentTest = new Test::MultipassForwardRenderingTest;
 						}
 						ImGui::EndMenu();
 					}

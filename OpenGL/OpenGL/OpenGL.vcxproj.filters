@@ -72,6 +72,9 @@
     <ClCompile Include="src\tests\DirectionalLightTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\tests\MultipassForwardRenderingTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -428,6 +431,7 @@
     </None>
     <None Include="res\shaders\PPBL_Color.shader" />
     <None Include="res\shaders\Directional_Light.shader" />
+    <None Include="res\shaders\Forward Shaders\Forward-Ambient.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -929,6 +933,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tests\DirectionalLightTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\MultipassForwardRenderingTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
