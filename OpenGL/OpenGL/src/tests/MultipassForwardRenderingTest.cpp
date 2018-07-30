@@ -156,8 +156,15 @@ void Test::MultipassForwardRenderingTest::OnRender()
 
 		glm::mat4 mvp = proj * view * model;
 		ambientShader->SetUniformMat4f("u_MVP", mvp);
-		ambientShader->SetUniform3f("AmbientIntensity", AmbientLightIntensity[0], AmbientLightIntensity[1], AmbientLightIntensity[2]);
-		
+		if (useAmbientShader)
+		{
+			ambientShader->SetUniform3f("AmbientIntensity", AmbientLightIntensity[0], AmbientLightIntensity[1], AmbientLightIntensity[2]);
+		}
+		else
+		{
+			ambientShader->SetUniform3f("AmbientIntensity", 0, 0, 0);
+		}
+
 		directionalLightShader->SetUniformMat4f("u_MVP", mvp);
 		directionalLightShader->SetUniformMat4f("u_Model", model);
 		directionalLightShader->SetUniform3f("eyePos", 480.0f, 270.0f, 500.0f);
@@ -173,7 +180,10 @@ void Test::MultipassForwardRenderingTest::OnRender()
 	GlCall(glDepthMask(GL_FALSE));
 	GlCall(glDepthFunc(GL_EQUAL));
 
-	renderer->Draw(*va, *ib, *directionalLightShader);
+	if (useDirectionalShader)
+	{
+		renderer->Draw(*va, *ib, *directionalLightShader);
+	}
 
 	GlCall(glDepthFunc(GL_LESS));
 	GlCall(glDepthMask(GL_TRUE));
@@ -217,6 +227,11 @@ void Test::MultipassForwardRenderingTest::OnImGuiRender()
 	ImGui::SliderFloat("Specular Light Intensity", &specularIntensity,0.0f,100.0f);
 	ImGui::SliderFloat("Specular Light Dampening", &specularDampening, 0.0f, 100.0f);
 
+	ImGui::Separator();
+
+	//Shader Controll
+	ImGui::Checkbox("Use Ambient Shader", &useAmbientShader);
+	ImGui::Checkbox("Use Directional Shader", &useDirectionalShader);
 
 	ImGui::Separator();
 

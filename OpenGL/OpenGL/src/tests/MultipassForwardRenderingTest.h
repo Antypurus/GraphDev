@@ -77,6 +77,9 @@ namespace  Test
 
 		float specularIntensity = 10.0f;
 		float specularDampening = 1.0f;
+
+		bool useAmbientShader = true;
+		bool useDirectionalShader = true;
 	public:
 		MultipassForwardRenderingTest();
 		~MultipassForwardRenderingTest();
